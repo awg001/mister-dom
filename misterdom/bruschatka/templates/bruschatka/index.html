@@ -1,0 +1,68 @@
+{% extends 'bruschatka/base.html' %}
+
+{% block content %}
+<ul class="list-articles">
+    {% for p in posts %}
+    <li><div class="article-panel">
+        <p class="first">Вид: {{p.cat}}</p>
+</div>
+
+{% if p.photo %}
+<!--        <p><img class="img-article-left thumb" src="{{p.photo.url}}"></p>-->
+        	<title>Слайдер на CSS</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta charset="utf-8">
+</head>
+<body>
+	<div class="all">
+		<input checked type="radio" name="respond" id="desktop">
+			<article id="slider">
+					<input checked type="radio" name="slider" id="switch1">
+					<input type="radio" name="slider" id="switch2">
+					<input type="radio" name="slider" id="switch3">
+					<input type="radio" name="slider" id="switch4">
+					<input type="radio" name="slider" id="switch5">
+				<div id="slides">
+					<div id="overflow">
+						<div class="image">
+							<article><img src="{{p.photo.url}}"></article>
+							<article><img src="{{p.photo.url}}"></article>
+							<article><img src="{{p.photo.url}}"></article>
+							<article><img src="{{p.photo.url}}"></article>
+							<article><img src="{{p.photo.url}}"></article>
+						</div>
+					</div>
+				</div>
+				<div id="controls">
+					<label for="switch1"></label>
+					<label for="switch2"></label>
+					<label for="switch3"></label>
+					<label for="switch4"></label>
+					<label for="switch5"></label>
+				</div>
+				<div id="active">
+					<label for="switch1"></label>
+					<label for="switch2"></label>
+					<label for="switch3"></label>
+					<label for="switch4"></label>
+					<label for="switch5"></label>
+				</div>
+			</article>
+	</div>
+</body>
+</html>
+{% endif %}
+		{% autoescape on %}
+		{{p.content|linebreaks|truncatewords:50}}
+		{% endautoescape %}
+			<h2>{{p.title}}</h2>
+			<h3>{{p.price}}</h3>
+			<p>{{p.content}}</p>
+			<div class="clear"></div>
+			<p class="link-read-post"><a href="{{ post.get_absolute_url }}">Читать характеристики</a></p>
+			<hr>
+			</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
