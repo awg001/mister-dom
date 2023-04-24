@@ -15,7 +15,6 @@ class Bruschatka(models.Model):
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, verbose_name="Категории")
 
     # relation = models.ForeignKey('Slider')
-
     def __str__(self):
         return self.title
 

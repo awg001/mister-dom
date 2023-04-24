@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, CreateView
 
 from .forms import *
 from .models import *
@@ -25,6 +25,7 @@ class BruschatkaHome(ListView):
         context['cat_selected'] = 0
         return context
 
+
 # def index(request):
 #     posts = Bruschatka.objects.all()
 #
@@ -37,46 +38,68 @@ class BruschatkaHome(ListView):
 #
 #     return render(request, 'bruschatka/index.html', context=context)
 
+def about(request):
+    return render(request, 'bruschatka/about.html', {'menu': menu, 'title': 'О сайте'})
 
-def krovlya(request):
-    if request.method == 'POST':
-        form = AddPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            # print(form.cleaned_data)
-            form.save()
-            return redirect('home')
-    else:
-        form = AddPostForm()
-    return render(request, 'bruschatka/krovlya.html', {'form': form, 'menu': menu, 'title': 'Кровля'})
+
+class Krovlya(CreateView):
+    form_class = AddPostForm
+    template_name = 'bruschatka/krovlya.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Добавление товара'
+        context['menu'] = menu
+        return context
+# def krovlya(request):
+#     if request.method == 'POST':
+#         form = AddPostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             # print(form.cleaned_data)
+#             form.save()
+#             return redirect('home')
+#     else:
+#         form = AddPostForm()
+#     return render(request, 'bruschatka/krovlya.html', {'form': form, 'menu': menu, 'title': 'Кровля'})
+
+def contact(request):
+    return HttpResponse("Обратная связь")
 
 
 def login(request):
     return HttpResponse("Авторизация")
 
 
-def contact(request):
-    return HttpResponse("Обратная связь")
-
-
-def about(request):
-    return HttpResponse("О сайте")
-
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
 
-def show_post(request, post_slug):
-    post = get_object_or_404(Bruschatka, slug=post_slug)
+# def show_post(request, post_slug):
+#     post = get_object_or_404(Bruschatka, slug=post_slug)
+#
+#     context = {
+#         'posts': post,
+#         'menu': menu,
+#         'title': post.title,
+#         'cat_selected': post.cat_id,
+#     }
+#
+#     return render(request, 'bruschatka/post.html', context=context)
 
-    context = {
-        'posts': post,
-        'menu': menu,
-        'title': post.title,
-        'cat_selected': post.cat_id,
-    }
 
-    return render(request, 'bruschatka/post.html', context=context)
+class ShowPost(DetailView):
+    model = Bruschatka
+    template_name = 'bruschatka/post.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
+
+    def get_context_data(self, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['post']
+        context['menu'] = menu
+        return context
+
 
 class BruschatkaCategory(ListView):
     model = Bruschatka
